@@ -15,12 +15,14 @@ class TransactionSeeder extends Seeder
      *
      * @return void
      */
+
     public function run()
     {
 
+
         DB::table('transactions')->insert([
-            'amount_owed'=> random_int(1,20),
-            'amount_paid'=> random_int(21,100),
+            'amount_owed'=> rand(1,20),
+            'amount_paid'=> rand(21,100),
             'updated_at' => Carbon::now(),
             'created_at' => Carbon::now()
         ]);

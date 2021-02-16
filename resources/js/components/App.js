@@ -7,14 +7,16 @@ const App = () => {
     const validate = () => {
         const numberRegex = /^[0-9]+$/;
         if (numberRegex.test && state.amountOwed && state.amountPaid) {
-            setState({
-                ...state,
-                errorMsg: "",
-            });
             if (state.amountPaid < state.amountOwed) {
+                console.log(typeof state.amountPaid, typeof state.amountOwed);
                 setState({
                     ...state,
                     errorMsg: "Amount paid must be more than amount owed",
+                });
+            } else {
+                setState({
+                    ...state,
+                    errorMsg: "",
                 });
             }
         } else {
@@ -28,8 +30,15 @@ const App = () => {
     const bills = [1, 5, 10, 20, 50, 100];
     const coins = [1, 5, 10, 25];
 
-    const onSubmit = () => {
-        // split into two variables after .
+    const onSubmit = async (e) => {
+        e.preventDefault();
+        const res = await cashRegister.post("/get-change", {
+            transactionId: state.transactionId,
+            amount_owed: state.amountOwed,
+            amount_paid: state.amountPaid,
+        });
+
+        console.log(res.data);
     };
 
     const handleChange = (e) => {
@@ -43,6 +52,7 @@ const App = () => {
     const [state, setState] = useState({
         amountOwed: 0,
         amountPaid: 0,
+        transactionId: null,
         validatedInput: false,
         loading: false,
         errorMsg: "",
@@ -54,6 +64,7 @@ const App = () => {
             ...state,
             amountOwed: res.data.transaction[0].amount_owed,
             amountPaid: res.data.transaction[0].amount_paid,
+            transactionId: res.data.transaction[0].id,
             loading: false,
         });
     };

@@ -3,7 +3,7 @@ import React from "react";
 const TransactionForm = (props) => {
     return (
         <div>
-            <form>
+            <form onSubmit={props.onSubmit}>
                 <div className="mb-3">
                     <label>Enter Amount Owed</label>
                     <input
