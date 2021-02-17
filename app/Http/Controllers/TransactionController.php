@@ -160,16 +160,23 @@ class TransactionController extends Controller
         $change=getChange($amount_owed,$amount_paid);
 
 
-        $dollars =["1"=>1,"5"=>5,"10"=>10,"25"=>25,"50"=>50,"100"=>100];
+        $dollars =["1"=>1,"5"=>5,"10"=>10,"20"=>20,"50"=>50,"100"=>100];
         $coins =["1"=>1,"5"=>5,"10"=>10,"25"=>25];
 
-        $response= ["cash"=>getMinCash($dollars,$change[0]),"coins" =>getMinCash($coins,$change[1])];
+
+        $cash_info= getMinCash($dollars,$change[0]);
+        $coin_info= getMinCash($coins,$change[1]);
+
+
+        $response= ["cash"=>getMinCash($dollars,$change[0]),"coins" =>getMinCash($coins,$change[1]),"amount_paid_cash"=>$amount_paid[0], "amount_paid_coins"=>$amount_paid[1], "amount_owed_cash"=>$amount_owed[0], "amount_owed_coins"=>$amount_owed[1] ];
 
 
         // update transaction and save
         $transaction=Transaction::find(request("transactionId"));
-        $transaction->amount_paid= request("amount_paid");
-        $transaction->amount_owed= request("amount_owed");
+        $transaction->amount_paid_cash= $amount_paid[0];
+        $transaction->amount_paid_coins= $amount_paid[1];
+        $transaction->amount_owed_cash= $amount_owed[0];
+        $transaction->amount_owed_coins= $amount_owed[1];
         $transaction->save();
 
 

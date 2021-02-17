@@ -27,8 +27,8 @@ const App = () => {
         }
     };
 
-    const bills = [1, 5, 10, 20, 50, 100];
-    const coins = [1, 5, 10, 25];
+    let cashInfo = {};
+    let coinInfo = {};
 
     const onSubmit = async (e) => {
         e.preventDefault();
@@ -39,6 +39,27 @@ const App = () => {
         });
 
         console.log(res.data);
+
+        cashInfo = res.data.cash;
+        coinInfo = res.data.coins;
+
+        console.log(res.data.cash, cashInfo, "is that you?");
+        console.log(
+            res.data.coins,
+            coinInfo,
+            "nested object not blocking my money"
+        );
+
+        setState({
+            ...state,
+            showCount: true,
+            amountOwed: `${res.data.amount_owed_cash}.${res.data.amount_owed_coins}`,
+            amountPaid: `${res.data.amount_paid_cash}.${res.data.amount_paid_coins}`,
+            cashInfo,
+            coinInfo,
+        });
+
+        console.log("state", state);
     };
 
     const handleChange = (e) => {
@@ -54,16 +75,21 @@ const App = () => {
         amountPaid: 0,
         transactionId: null,
         validatedInput: false,
+        showCount: false,
+        test: {},
         loading: false,
         errorMsg: "",
+        cashBack: "",
+        cashInfo: {},
+        coinInfo: {},
     });
 
     const fetchTransaction = async () => {
         const res = await cashRegister.get("/transaction");
         setState({
             ...state,
-            amountOwed: res.data.transaction[0].amount_owed,
-            amountPaid: res.data.transaction[0].amount_paid,
+            amountOwed: `${res.data.transaction[0].amount_owed_cash}.${res.data.transaction[0].amount_owed_coins}`,
+            amountPaid: `${res.data.transaction[0].amount_paid_cash}.${res.data.transaction[0].amount_paid_coins}`,
             transactionId: res.data.transaction[0].id,
             loading: false,
         });
@@ -80,15 +106,28 @@ const App = () => {
     return (
         <div className="container p-5">
             <h1 className="text-center">Cash Register</h1>
-            <TransactionForm
-                amountOwed={state.amountOwed}
-                amountPaid={state.amountPaid}
-                handleChange={handleChange}
-                onSubmit={onSubmit}
-                validate={validate}
-                errorMsg={state.errorMsg}
+            <div className="mb-5" id="form-wrapper">
+                <TransactionForm
+                    amountOwed={state.amountOwed}
+                    amountPaid={state.amountPaid}
+                    handleChange={handleChange}
+                    onSubmit={onSubmit}
+                    validate={validate}
+                    errorMsg={state.errorMsg}
+                />
+            </div>
+
+            <ChangeCount
+                showCount={state.showCount}
+                type={"cash"}
+                cashInfo={state.cashInfo}
             />
-            <ChangeCount />
+
+            <ChangeCount
+                showCount={state.showCount}
+                type={"coin"}
+                cashInfo={state.coinInfo}
+            />
         </div>
     );
 };
