@@ -38,10 +38,10 @@ class TransactionController extends Controller
 
 
 
-        $amount=25;
-        $dollars =["penny"=>1,"nickel"=>5,"dime"=>10];
 
 
+        $amount=18;
+        $dollars =["1"=>1,"5"=>5,"10"=>10];
 
         function getChange($cash, $amount_to_give_back){
 
@@ -53,47 +53,85 @@ class TransactionController extends Controller
             $min_coins[0]=0;
             $min_coins_length=count($min_coins);
 
-
             // looking at each coin
             foreach ($cash as $key => $cash_value) {
 
-            echo "inside of parent loop <br>";
-            echo "{$min_coins_length} <br>";
 
-                // for each coin find coin combos for 0-amount_to_give_back
+            // for each coin find coin combos for 0-amount_to_give_back
                 for($i = 0; $i<= $min_coins_length; $i++) {
 
 
-                      // make sure the difference between the current amount and the current coin is at least 0
+                    // make sure the difference between the current amount and the current coin is at least 0
                     if(($i-$cash_value) >=0){
-                        $test= $i-$cash_value;
 
                         // replace old value
                         $min_coins[$i]= min($min_coins[$i-$cash_value]+1,$min_coins[$i]);
-                    }
 
+                    }
                 }
 
             }
 
 
-            // if the value remains Infinity, it means that no coin combination can make that amount
-            if(floatval($min_coins[$amount_to_give_back])!=INF){
+        // if the value remains Infinity, it means that no coin combination can make that amount
+                if(floatval($min_coins[$amount_to_give_back])!=INF){
+
+                    // minimum amount of coins will be last value in array after calculations are done
+                    //    echo "{$min_coins[$amount_to_give_back]} min number of coins <br>";
+
+                    // reverse array, keep numeric keys the same
+                    $cash_count_array= array_reverse($cash,true);
+
+                    // replace all values with 0
+                    $cash_count_array=array_map(function($val) { return $val=0; }, $cash_count_array);
 
 
 
-                echo "{$min_coins[$amount_to_give_back]} <br>";
+                    // loop over reverse cash arr
+                    //initialize cash_back to amount of change needed to giveback
+                    $cash_back=$amount_to_give_back;
+                    $index = 0;
+                    foreach ($cash_count_array as $key => $count){
+                        echo"start of loop <br>";
+                        $index++;
 
-            } else{
+                        // turn current coin key into int and set as current cash value on first iteration
+                        $current_cash_value=intval($key);
 
-            echo "hello pt 3 <br>";
+                        // get the remainder from cash owed/current_cash_value
+                        $remainder=$cash_back % $current_cash_value;
 
-            }
+                        //if cash due is divisible by the current cash amount it will return value, if it is not it will return 0
+                        $cash_count=intdiv($cash_back,$current_cash_value);
+
+                        // current index value, cash_count_array keeps track of our coin count
+                        // set equal to current coin count from int division above
+                        $count= $cash_count;
+
+
+                        $current_cash_value=$remainder;
+
+                        // update cash_back amount to remainder
+                        $cash_back=$remainder;
+
+                        echo "${remainder} remainder <br>";
+                        echo "${current_cash_value} current cash value <br>";
+                        echo "key: {$key} value: {$count} of each coin <br>";
+                        echo "{$cash_count} cash count <br>";
+                    }
+
+
+                } else{
+
+                echo "hello pt 3 <br>";
+
+                }
+
+                echo "end of script";
 
         };
 
-        //getChange($dollars,$amount);
-
+        getChange($dollars,$amount);
 
 
         $amount_paid=isFloat(request("amount_paid"));
