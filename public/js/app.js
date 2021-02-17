@@ -2004,8 +2004,8 @@ var App = function App() {
     }
   };
 
-  var bills = [1, 5, 10, 20, 50, 100];
-  var coins = [1, 5, 10, 25];
+  var cashInfo = {};
+  var coinInfo = {};
 
   var onSubmit = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee(e) {
@@ -2025,8 +2025,20 @@ var App = function App() {
             case 3:
               res = _context.sent;
               console.log(res.data);
+              cashInfo = res.data.cash;
+              coinInfo = res.data.coins;
+              console.log(res.data.cash, cashInfo, "is that you?");
+              console.log(res.data.coins, coinInfo, "nested object not blocking my money");
+              setState(_objectSpread(_objectSpread({}, state), {}, {
+                showCount: true,
+                amountOwed: "".concat(res.data.amount_owed_cash, ".").concat(res.data.amount_owed_coins),
+                amountPaid: "".concat(res.data.amount_paid_cash, ".").concat(res.data.amount_paid_coins),
+                cashInfo: cashInfo,
+                coinInfo: coinInfo
+              }));
+              console.log("state", state);
 
-            case 5:
+            case 11:
             case "end":
               return _context.stop();
           }
@@ -2049,8 +2061,13 @@ var App = function App() {
     amountPaid: 0,
     transactionId: null,
     validatedInput: false,
+    showCount: false,
+    test: {},
     loading: false,
-    errorMsg: ""
+    errorMsg: "",
+    cashBack: "",
+    cashInfo: {},
+    coinInfo: {}
   }),
       _useState2 = _slicedToArray(_useState, 2),
       state = _useState2[0],
@@ -2069,8 +2086,8 @@ var App = function App() {
             case 2:
               res = _context2.sent;
               setState(_objectSpread(_objectSpread({}, state), {}, {
-                amountOwed: res.data.transaction[0].amount_owed,
-                amountPaid: res.data.transaction[0].amount_paid,
+                amountOwed: "".concat(res.data.transaction[0].amount_owed_cash, ".").concat(res.data.transaction[0].amount_owed_coins),
+                amountPaid: "".concat(res.data.transaction[0].amount_paid_cash, ".").concat(res.data.transaction[0].amount_paid_coins),
                 transactionId: res.data.transaction[0].id,
                 loading: false
               }));
@@ -2099,14 +2116,26 @@ var App = function App() {
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("h1", {
       className: "text-center",
       children: "Cash Register"
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_TransactionForm__WEBPACK_IMPORTED_MODULE_2__.default, {
-      amountOwed: state.amountOwed,
-      amountPaid: state.amountPaid,
-      handleChange: handleChange,
-      onSubmit: onSubmit,
-      validate: validate,
-      errorMsg: state.errorMsg
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_ChangeCount__WEBPACK_IMPORTED_MODULE_3__.default, {})]
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
+      className: "mb-5",
+      id: "form-wrapper",
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_TransactionForm__WEBPACK_IMPORTED_MODULE_2__.default, {
+        amountOwed: state.amountOwed,
+        amountPaid: state.amountPaid,
+        handleChange: handleChange,
+        onSubmit: onSubmit,
+        validate: validate,
+        errorMsg: state.errorMsg
+      })
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_ChangeCount__WEBPACK_IMPORTED_MODULE_3__.default, {
+      showCount: state.showCount,
+      type: "cash",
+      cashInfo: state.cashInfo
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_ChangeCount__WEBPACK_IMPORTED_MODULE_3__.default, {
+      showCount: state.showCount,
+      type: "coin",
+      cashInfo: state.coinInfo
+    })]
   });
 };
 
@@ -2130,10 +2159,89 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var ChangeCount = function ChangeCount() {
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
-    children: "Change Count"
-  });
+
+
+var ChangeCount = function ChangeCount(props) {
+  console.log(props, "change component");
+
+  if (props.showCount) {
+    var p = props.cashInfo.cash_count;
+    console.log(p[1], "pennies ");
+
+    if (props.type === "coin") {
+      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+        className: "card mb-4",
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+          className: "card-body",
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("h5", {
+            className: "card-title",
+            children: "Coin Count"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("h6", {
+            style: {
+              color: "green"
+            },
+            className: "card-subtitle mb-2",
+            children: "Min coins needed: ".concat(props.cashInfo.min_cash, " Coins Due: ").concat(props.cashInfo.cash_back)
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("ul", {
+            className: "list-group",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("li", {
+              className: "list-group-item",
+              children: "pennies: ".concat(p["1"])
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("li", {
+              className: "list-group-item",
+              children: "nickels: ".concat(p["5"])
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("li", {
+              className: "list-group-item",
+              children: "dimes: ".concat(p["10"])
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("li", {
+              className: "list-group-item",
+              children: "quarters: ".concat(p["25"])
+            })]
+          })]
+        })
+      });
+    } else {
+      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+        className: "card mb-4",
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+          className: "card-body",
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("h5", {
+            className: "card-title",
+            children: "Cash Count"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("h6", {
+            style: {
+              color: "green"
+            },
+            className: "card-subtitle mb-2",
+            children: "Min bills needed: ".concat(props.cashInfo.min_cash, " Cash Due: ").concat(props.cashInfo.cash_back)
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("ul", {
+            className: "list-group",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("li", {
+              className: "list-group-item",
+              children: "dollars: ".concat(p["1"])
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("li", {
+              className: "list-group-item",
+              children: "fives: ".concat(p["5"])
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("li", {
+              className: "list-group-item",
+              children: "tens: ".concat(p["10"])
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("li", {
+              className: "list-group-item",
+              children: "twenties: ".concat(p["20"])
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("li", {
+              className: "list-group-item",
+              children: "fifties: ".concat(p["50"])
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("li", {
+              className: "list-group-item",
+              children: "hundreds: ".concat(p["100"])
+            })]
+          })]
+        })
+      });
+    }
+  } else {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.Fragment, {});
+  }
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ChangeCount);

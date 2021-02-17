@@ -18,10 +18,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/test',function(Request $request){
-    return[1,2,3];
-});
-
 Route::get('/transaction', 'App\Http\Controllers\TransactionController@index');
 Route::post('/get-change', 'App\Http\Controllers\TransactionController@calculate');
 

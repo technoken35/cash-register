@@ -16,8 +16,11 @@ class CreateTransactionsTable extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->bigInteger('amount_owed');
-            $table->bigInteger('amount_paid');
+            $table->bigInteger('amount_owed_cash');
+            $table->integer('amount_owed_coins');
+            $table->bigInteger('amount_paid_cash');
+            $table->integer('amount_paid_coins');
+
         });
     }
 
