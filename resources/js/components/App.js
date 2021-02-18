@@ -7,8 +7,7 @@ const App = () => {
     const validate = () => {
         const numberRegex = /^[0-9]+$/;
         if (numberRegex.test && state.amountOwed && state.amountPaid) {
-            if (state.amountPaid < state.amountOwed) {
-                console.log(typeof state.amountPaid, typeof state.amountOwed);
+            if (Number(state.amountPaid) < Number(state.amountOwed)) {
                 setState({
                     ...state,
                     errorMsg: "Amount paid must be more than amount owed",

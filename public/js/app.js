@@ -1858,7 +1858,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 var axios = window.axios;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (axios.create({
-  baseURL: "http://localhost:8000/api"
+  baseURL: "https://cash-register-app.herokuapp.com/"
 }));
 
 /***/ }),
@@ -1973,8 +1973,6 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 
 
 
@@ -1987,8 +1985,7 @@ var App = function App() {
     var numberRegex = /^[0-9]+$/;
 
     if (numberRegex.test && state.amountOwed && state.amountPaid) {
-      if (state.amountPaid < state.amountOwed) {
-        console.log(_typeof(state.amountPaid), _typeof(state.amountOwed));
+      if (Number(state.amountPaid) < Number(state.amountOwed)) {
         setState(_objectSpread(_objectSpread({}, state), {}, {
           errorMsg: "Amount paid must be more than amount owed"
         }));
@@ -2027,8 +2024,6 @@ var App = function App() {
               console.log(res.data);
               cashInfo = res.data.cash;
               coinInfo = res.data.coins;
-              console.log(res.data.cash, cashInfo, "is that you?");
-              console.log(res.data.coins, coinInfo, "nested object not blocking my money");
               setState(_objectSpread(_objectSpread({}, state), {}, {
                 showCount: true,
                 amountOwed: "".concat(res.data.amount_owed_cash, ".").concat(res.data.amount_owed_coins),
@@ -2036,9 +2031,8 @@ var App = function App() {
                 cashInfo: cashInfo,
                 coinInfo: coinInfo
               }));
-              console.log("state", state);
 
-            case 11:
+            case 8:
             case "end":
               return _context.stop();
           }
@@ -2162,11 +2156,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var ChangeCount = function ChangeCount(props) {
-  console.log(props, "change component");
-
   if (props.showCount) {
     var p = props.cashInfo.cash_count;
-    console.log(p[1], "pennies ");
 
     if (props.type === "coin") {
       return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {

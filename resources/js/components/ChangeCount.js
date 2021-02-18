@@ -1,11 +1,8 @@
 import React from "react";
 
 const ChangeCount = (props) => {
-    console.log(props, "change component");
-
     if (props.showCount) {
         const p = props.cashInfo.cash_count;
-        console.log(p[1], "pennies ");
 
         if (props.type === "coin") {
             return (
