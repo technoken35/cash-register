@@ -42,14 +42,6 @@ const App = () => {
 
         cashInfo = res.data.cash;
         coinInfo = res.data.coins;
-
-        console.log(res.data.cash, cashInfo, "is that you?");
-        console.log(
-            res.data.coins,
-            coinInfo,
-            "nested object not blocking my money"
-        );
-
         setState({
             ...state,
             showCount: true,
@@ -58,8 +50,6 @@ const App = () => {
             cashInfo,
             coinInfo,
         });
-
-        console.log("state", state);
     };
 
     const handleChange = (e) => {

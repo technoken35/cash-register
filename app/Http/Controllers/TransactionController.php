@@ -164,8 +164,7 @@ class TransactionController extends Controller
         $coins =["1"=>1,"5"=>5,"10"=>10,"25"=>25];
 
 
-        $cash_info= getMinCash($dollars,$change[0]);
-        $coin_info= getMinCash($coins,$change[1]);
+
 
 
         $response= ["cash"=>getMinCash($dollars,$change[0]),"coins" =>getMinCash($coins,$change[1]),"amount_paid_cash"=>$amount_paid[0], "amount_paid_coins"=>$amount_paid[1], "amount_owed_cash"=>$amount_owed[0], "amount_owed_coins"=>$amount_owed[1] ];
