@@ -1858,7 +1858,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 var axios = window.axios;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (axios.create({
-  baseURL: "https://cash-register-app.herokuapp.com/"
+  baseURL: "https://cash-register-app.herokuapp.com/api"
 }));
 
 /***/ }),
